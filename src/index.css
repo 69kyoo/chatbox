@@ -1,11 +1,53 @@
 @tailwind base; @tailwind components; @tailwind utilities;
-html,body,#root{min-height:100%}
-body{background:#0b0620;color:#f4f0ff;font-family:'VT323','Courier New',monospace;font-size:20px}
-.logo{font-family:'Press Start 2P','Courier New',monospace;color:#ffd21f;font-size:clamp(1.5rem,8.5vw,4.5rem);letter-spacing:-.06em;line-height:1;text-transform:uppercase;
- text-shadow:3px 0 #000,-3px 0 #000,0 3px #000,0 -3px #000,3px 3px #000,-3px -3px #000,3px -3px #000,-3px 3px #000,6px 6px 0 #000,8px 8px 0 #8a4b00}
-.panel{background:#150a3a;border:4px solid #000;box-shadow:6px 6px 0 #000,inset 0 0 0 2px #5b3fd6}
-.btn{font-family:'Press Start 2P',monospace;font-size:.7rem;padding:.8rem 1rem;background:#ffd21f;color:#000;border:3px solid #000;box-shadow:4px 4px 0 #000;cursor:pointer}
-.btn:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 #000}.btn:disabled{opacity:.5}
-.inp{width:100%;background:#0b0620;border:3px solid #5b3fd6;padding:.5rem .7rem;color:#fff;font-size:1.2rem;outline:none}.inp:focus{border-color:#ffd21f}
-.badge{font-family:'Press Start 2P',monospace;font-size:.5rem;padding:.2rem .35rem;border:2px solid #000;color:#000}
+:root{--ink:#000;--bg:#0b0620;--panel:#150a3a;--edge:#5b3fd6;--gold:#ffd21f;--gold-d:#c77b00;--cyan:#5ee7ff;--pink:#ff7ab8}
+*{min-width:0}
+html,body,#root{height:100%}
+html{-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:#f4f0ff;font-family:'VT323','Courier New',monospace;font-size:20px;overflow-x:hidden;image-rendering:pixelated}
+#bg3d{position:fixed;inset:0;width:100%;height:100%;z-index:0;image-rendering:pixelated;image-rendering:crisp-edges;pointer-events:none}
+.app-root{position:relative;z-index:1;height:100%;display:flex;flex-direction:column}
+.scanlines::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:50;background:repeating-linear-gradient(0deg,rgba(0,0,0,.12) 0 1px,transparent 1px 3px);mix-blend-mode:multiply}
+
+/* ---- LOGO: Press Start 2P, thick stepped outline via stacked hard shadows (no blur => pixel edges) ---- */
+.logo{margin:0;font-family:'Press Start 2P','Courier New',monospace;font-size:clamp(1.35rem,9.2vw,4.6rem);letter-spacing:-.09em;line-height:1;text-transform:uppercase;white-space:nowrap;cursor:pointer;max-width:100%;text-align:center}
+.logo-sm{font-size:clamp(1rem,5vw,1.6rem)}
+.logo-text{position:relative;display:inline-block;color:var(--gold);-webkit-font-smoothing:none;font-smooth:never;
+ text-shadow:
+  /* thick black outline, 3 layers */
+  .06em 0 #000,-.06em 0 #000,0 .06em #000,0 -.06em #000,.06em .06em #000,-.06em -.06em #000,.06em -.06em #000,-.06em .06em #000,
+  .12em 0 #000,-.12em 0 #000,0 .12em #000,0 -.12em #000,.12em .12em #000,-.12em -.12em #000,.12em -.12em #000,-.12em .12em #000,
+  /* hard dimensional extrusion */
+  .15em .15em 0 #8a4b00,.18em .18em 0 #8a4b00,.21em .21em 0 #000,.24em .24em 0 #000,.27em .27em 0 #000}
+.logo-text::before{content:attr(data-text);position:absolute;left:0;top:0;color:#fff3a6;clip-path:polygon(0 0,100% 0,100% 34%,0 34%);text-shadow:none;pointer-events:none}
+.logo-text::after{content:attr(data-text);position:absolute;left:0;top:0;color:var(--gold-d);clip-path:polygon(0 72%,100% 72%,100% 100%,0 100%);text-shadow:none;pointer-events:none}
+@media (prefers-reduced-motion:no-preference){.logo:hover .logo-text{animation:logo-bob .5s steps(2) infinite}}
+@keyframes logo-bob{50%{transform:translateY(-.06em)}}
+
+.panel{background:rgba(21,10,58,.94);border:4px solid #000;box-shadow:5px 5px 0 #000,inset 0 0 0 2px var(--edge)}
+.btn{font-family:'Press Start 2P',monospace;font-size:.65rem;line-height:1.2;padding:.75rem .9rem;background:var(--gold);color:#000;border:3px solid #000;box-shadow:4px 4px 0 #000;cursor:pointer;min-height:44px;touch-action:manipulation}
+.btn:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 #000}.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 #000}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-alt{background:#2a1a6e;color:#fff;box-shadow:4px 4px 0 #000,inset 0 0 0 2px var(--edge)}
+.btn-danger{background:#ff4d4d}
+.btn-sm{font-size:.5rem;padding:.4rem .55rem;min-height:32px;box-shadow:3px 3px 0 #000}
+.inp{width:100%;background:#0b0620;border:3px solid var(--edge);padding:.5rem .7rem;color:#fff;font-size:1.25rem;outline:none;border-radius:0;font-family:inherit}
+.inp:focus{border-color:var(--gold)}
+select.inp{padding:.4rem}
+.badge{font-family:'Press Start 2P',monospace;font-size:.45rem;padding:.2rem .3rem;border:2px solid #000;color:#000;line-height:1}
+.lbl{font-family:'Press Start 2P',monospace;font-size:.6rem;color:var(--gold)}
+.tab{font-family:'Press Start 2P',monospace;font-size:.55rem;padding:.65rem .7rem;color:#cfc6ff;border:3px solid transparent;white-space:nowrap;position:relative;min-height:44px}
+.tab[aria-current=page]{background:var(--gold);color:#000;border-color:#000;box-shadow:3px 3px 0 #000}
+.dot{position:absolute;top:2px;right:2px;background:#ff4d4d;color:#fff;font-size:.45rem;padding:2px 4px;border:2px solid #000;font-family:'Press Start 2P',monospace}
+.bubble{border:3px solid #000;padding:.35rem .6rem;max-width:min(85%,36rem);overflow-wrap:anywhere;word-break:break-word;white-space:pre-wrap}
+.bubble.me{background:#3b2a9a;margin-left:auto;box-shadow:3px 3px 0 #000}
+.bubble.them{background:#24174f;box-shadow:3px 3px 0 #000}
+.bubble.gone{background:transparent;border-style:dashed;border-color:#5b3fd6;color:#8f86c9;font-style:italic}
+.msg-img{max-width:100%;max-height:260px;width:auto;height:auto;border:3px solid #000;image-rendering:auto;display:block;margin-top:.3rem;cursor:zoom-in;background:#0b0620}
+.scroll-y{overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.safe-b{padding-bottom:max(.5rem,env(safe-area-inset-bottom))}
+.alert-overlay{position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;padding:1rem;background:rgba(0,0,0,.82)}
+@media (prefers-reduced-motion:no-preference){.alert-box{animation:alert-pop .35s steps(5)}.alert-flash{animation:flash .5s steps(2) 6}}
+@keyframes alert-pop{from{transform:scale(.3)}to{transform:scale(1)}}
+@keyframes flash{50%{background:#ff4d4d;color:#000}}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:.75rem;z-index:90;max-width:92vw}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}

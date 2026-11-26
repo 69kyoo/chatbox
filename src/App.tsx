@@ -1,22 +1,15 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { AuthProvider, useAuth } from './auth'
 import { configured } from './lib/supabase'
 import AuthPage from './pages/AuthPage'
-import ResetPage from './pages/ResetPage'
 import Lobby from './pages/Lobby'
+import Background3D from './components/Background3D'
 
 function Gate() {
   const { session, loading } = useAuth()
   if (loading) return <p className="p-8 font-pixel text-xs">LOADING...</p>
-  return (
-    <Routes>
-      <Route path="/reset" element={<ResetPage />} />
-      <Route path="/" element={session ? <Lobby /> : <AuthPage />} />
-      <Route path="*" element={<Navigate to="/" replace />} />
-    </Routes>
-  )
+  return session ? <Lobby /> : <AuthPage />
 }
 export default function App() {
-  if (!configured) return <p className="p-8">Missing VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY. See .env.example.</p>
-  return <BrowserRouter><AuthProvider><Gate /></AuthProvider></BrowserRouter>
+  if (!configured) return <main className="min-h-screen flex items-center justify-center p-4"><div className="panel p-5 max-w-lg"><h2 className="font-pixel text-xs text-yellow-300 mb-3">CONFIG MISSING</h2><p>The site was built without VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY. Add them in GitHub: Settings, Secrets and variables, Actions, Variables tab. Then re-run the deploy workflow.</p></div></main>
+  return <><Background3D /><div className="app-root scanlines"><AuthProvider><Gate /></AuthProvider></div></>
 }
