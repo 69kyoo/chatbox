@@ -1,0 +1,11 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+html,body,#root{min-height:100%}
+body{background:#0b0620;color:#f4f0ff;font-family:'VT323','Courier New',monospace;font-size:20px}
+.logo{font-family:'Press Start 2P','Courier New',monospace;color:#ffd21f;font-size:clamp(1.5rem,8.5vw,4.5rem);letter-spacing:-.06em;line-height:1;text-transform:uppercase;
+ text-shadow:3px 0 #000,-3px 0 #000,0 3px #000,0 -3px #000,3px 3px #000,-3px -3px #000,3px -3px #000,-3px 3px #000,6px 6px 0 #000,8px 8px 0 #8a4b00}
+.panel{background:#150a3a;border:4px solid #000;box-shadow:6px 6px 0 #000,inset 0 0 0 2px #5b3fd6}
+.btn{font-family:'Press Start 2P',monospace;font-size:.7rem;padding:.8rem 1rem;background:#ffd21f;color:#000;border:3px solid #000;box-shadow:4px 4px 0 #000;cursor:pointer}
+.btn:hover{transform:translate(1px,1px);box-shadow:3px 3px 0 #000}.btn:disabled{opacity:.5}
+.inp{width:100%;background:#0b0620;border:3px solid #5b3fd6;padding:.5rem .7rem;color:#fff;font-size:1.2rem;outline:none}.inp:focus{border-color:#ffd21f}
+.badge{font-family:'Press Start 2P',monospace;font-size:.5rem;padding:.2rem .35rem;border:2px solid #000;color:#000}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
