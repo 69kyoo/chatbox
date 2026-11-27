@@ -41,7 +41,18 @@ export default function Members() {
     {state === 'loading' && <p>Loading…</p>}
     {state === 'err' && <p className="text-pink-300">Could not load the user list.</p>}
     {state === 'ok' && groups.length === 0 && <p className="text-emerald-200">No users found.</p>}
-    {groups.map(g => <div key={g.role} className="panel p-3 flex flex-col gap-1">
+    {groups.map(g => g.role === 'owner' ? <div key="owner" className="god" aria-label="Owner">
+      <div className="god-head">★ THE ONE ★ THE OWNER ★</div>
+      {[['8%', '12%', '0s'], ['90%', '18%', '.4s'], ['16%', '78%', '.8s'], ['84%', '72%', '.2s'], ['50%', '6%', '.6s'], ['62%', '88%', '1s']].map(([l, t, d], i) => <i key={i} className="god-spark" style={{ left: l, top: t, animationDelay: d }} />)}
+      {g.list.map(u => <div key={u.id}>
+        <button className="god-row" aria-expanded={open === u.id} onClick={() => setOpen(open === u.id ? null : u.id)}>
+          {u.avatar_url ? <img src={u.avatar_url} alt="" className="god-av" style={{ imageRendering: 'pixelated' }} /> : <span className="god-av">{u.username[0]?.toUpperCase()}</span>}
+          <span className="min-w-0"><i className="god-crown" /><span className="god-name">{u.username}</span><span className="god-badge">OWNER</span>
+            <span className="god-tag block">SUPREME INVESTOR · FOUNDER · THE ONLY GOD</span></span>
+        </button>
+        {open === u.id && <p className="god-bio">{u.bio || 'No bio needed. Everyone knows.'}</p>}
+      </div>)}
+    </div> : <div key={g.role} className="panel p-3 flex flex-col gap-1">
       <h3 className="lbl mb-1">{TITLE[g.role]} ({g.list.length})</h3>
       {g.list.map(u => <div key={u.id}>
         <button className="w-full flex items-center gap-3 text-left py-1" aria-expanded={open === u.id} onClick={() => setOpen(open === u.id ? null : u.id)}>

@@ -140,3 +140,32 @@ html[data-theme=horror] .app-root::before{content:'';position:fixed;inset:0;poin
 }
 @keyframes h-flicker{0%,100%{opacity:1}6%{opacity:.35}8%{opacity:1}46%{opacity:1}47%{opacity:.2}49%{opacity:1}50%{opacity:.5}52%{opacity:1}}
 @keyframes h-pulse{50%{box-shadow:5px 5px 0 #000,inset 0 0 0 2px var(--edge),inset 0 0 0 4px #000,inset 0 0 0 6px var(--panel-trim),0 0 34px rgba(138,3,3,.55)}}
+
+/* ---- OWNER "GOD" CARD (USERS tab): theme-independent gold supernova. Animations are switched off by the global reduced-motion rule. ---- */
+.god{position:relative;overflow:hidden;isolation:isolate;padding:1rem .9rem;color:#fff;background:radial-gradient(ellipse at 50% 0%,#5a3600 0%,#2a1600 55%,#120a00 100%);border:4px solid #000;
+ box-shadow:0 0 0 3px #ffd21f,0 0 0 6px #000,0 0 22px 6px rgba(255,210,31,.8),0 0 60px 18px rgba(255,110,0,.45),6px 6px 0 6px #000;animation:god-pulse 1.1s ease-in-out infinite}
+.god::before{content:'';position:absolute;left:50%;top:50%;width:260%;aspect-ratio:1;translate:-50% -50%;z-index:-1;pointer-events:none;
+ background:repeating-conic-gradient(from 0deg,rgba(255,226,110,.34) 0 5deg,transparent 5deg 15deg);animation:god-spin 5s linear infinite;
+ -webkit-mask:radial-gradient(circle,transparent 8%,#000 40%,transparent 70%);mask:radial-gradient(circle,transparent 8%,#000 40%,transparent 70%)}
+.god::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:2;background:linear-gradient(105deg,transparent 38%,rgba(255,255,255,.6) 50%,transparent 62%);background-size:250% 100%;animation:god-shine 2.2s linear infinite;mix-blend-mode:overlay}
+.god-head{font-family:'Press Start 2P',monospace;font-size:.55rem;text-align:center;letter-spacing:.08em;color:#ffd21f;text-shadow:0 0 8px #ff9f1c,2px 2px 0 #000;margin-bottom:.6rem;animation:god-flick 2.4s steps(1) infinite}
+.god-row{display:flex;align-items:center;gap:.9rem;width:100%;text-align:left;position:relative;z-index:1}
+.god-av{width:64px;height:64px;flex:none;object-fit:cover;border:4px solid #ffd21f;outline:3px solid #000;display:grid;place-items:center;background:#7a4b00;font-family:'Press Start 2P',monospace;font-size:1.4rem;color:#fff;
+ box-shadow:0 0 0 3px #000,0 0 18px 6px rgba(255,210,31,.9);animation:god-ring 1s ease-in-out infinite}
+.god-name{font-family:'Press Start 2P',monospace;font-size:clamp(.9rem,5vw,1.35rem);line-height:1.2;overflow-wrap:anywhere;color:transparent;-webkit-text-stroke:.5px rgba(0,0,0,.55);
+ background:linear-gradient(90deg,#fff 0%,#ffd21f 20%,#ff5a3c 40%,#fff 50%,#ffd21f 70%,#ff5a3c 90%,#fff 100%) 0 0/250% 100%;-webkit-background-clip:text;background-clip:text;
+ filter:drop-shadow(0 0 6px #ffb300) drop-shadow(0 0 14px rgba(255,120,0,.8));animation:god-text 1.4s linear infinite}
+.god-tag{font-family:'Press Start 2P',monospace;font-size:.45rem;margin-top:.45rem;color:#ffe9a0;text-shadow:1px 1px 0 #000;letter-spacing:.05em}
+.god-crown{display:block;width:26px;height:18px;margin-bottom:.2rem;image-rendering:pixelated;animation:god-bob .8s steps(2) infinite;
+ background:url("data:image/svg+xml,%3Csvg%20xmlns=%27http://www.w3.org/2000/svg%27%20viewBox=%270%200%2013%209%27%20shape-rendering=%27crispEdges%27%3E%3Cpath%20fill=%27%23000%27%20d=%27M0%202h3v1h1V1h1V0h3v1h1v2h1V2h3v7H0z%27/%3E%3Cpath%20fill=%27%23ffd21f%27%20d=%27M1%203h1v2h1V3h1V2h1v3h3V2h1v1h1v2h1V3h1v5H1z%27/%3E%3Cpath%20fill=%27%23ff3b3b%27%20d=%27M3%206h1v1H3zM6%206h1v1H6zM9%206h1v1H9z%27/%3E%3C/svg%3E") center/100% 100% no-repeat}
+.god-spark{position:absolute;z-index:1;width:6px;height:6px;background:#fff;box-shadow:0 0 8px 3px #ffd21f;animation:god-twinkle 1.3s steps(2) infinite;pointer-events:none}
+.god-bio{position:relative;z-index:1;margin-top:.6rem;padding:.4rem .6rem;background:rgba(0,0,0,.45);border:2px solid #ffd21f;color:#fff3c4;overflow-wrap:anywhere}
+.god-badge{font-family:'Press Start 2P',monospace;font-size:.5rem;padding:.25rem .4rem;border:2px solid #000;color:#000;background:linear-gradient(90deg,#ffd21f,#fff,#ffd21f) 0 0/200% 100%;animation:god-text 1.2s linear infinite;margin-left:.4rem;vertical-align:middle}
+@keyframes god-pulse{50%{box-shadow:0 0 0 3px #fff3a0,0 0 0 6px #000,0 0 34px 12px rgba(255,210,31,1),0 0 90px 30px rgba(255,110,0,.6),6px 6px 0 6px #000}}
+@keyframes god-spin{to{rotate:360deg}}
+@keyframes god-shine{from{background-position:150% 0}to{background-position:-100% 0}}
+@keyframes god-text{to{background-position:250% 0}}
+@keyframes god-ring{50%{box-shadow:0 0 0 3px #000,0 0 30px 12px rgba(255,240,150,1);transform:scale(1.06)}}
+@keyframes god-flick{0%,100%{opacity:1}92%{opacity:1}94%{opacity:.4}96%{opacity:1}98%{opacity:.6}}
+@keyframes god-bob{50%{transform:translateY(-3px)}}
+@keyframes god-twinkle{0%,100%{opacity:1;scale:1}50%{opacity:.15;scale:.4}}
