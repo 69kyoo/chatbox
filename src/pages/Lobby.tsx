@@ -13,7 +13,8 @@ const Threads = lazy(() => import('./Threads'))
 const Notifications = lazy(() => import('./Notifications'))
 const Profile = lazy(() => import('./Profile'))
 const Admin = lazy(() => import('./Admin'))
-type Tab = 'chat' | 'rooms' | 'threads' | 'notifs' | 'profile' | 'admin'
+const Game = lazy(() => import('./Game'))
+type Tab = 'chat' | 'rooms' | 'threads' | 'notifs' | 'game' | 'profile' | 'admin'
 
 export default function Lobby() {
   const { profile, session, can } = useAuth(); const me = session!.user.id
@@ -38,7 +39,7 @@ export default function Lobby() {
 
   function link(l: string) { if (l.startsWith('thread:')) { setOpenThread(l.slice(7)); go('threads') } else if (l.startsWith('room:')) go('rooms') }
   const isStaff = !!profile && (profile.role !== 'member' || can('user.manage') || can('chat.mute') || can('report.manage') || can('audit.view'))
-  const tabs: [Tab, string, number][] = [['chat', 'PUBLIC', unreadChat], ['rooms', 'ROOMS', 0], ['threads', 'THREADS', 0], ['notifs', 'ALERTS', unreadN], ['profile', 'ME', 0]]
+  const tabs: [Tab, string, number][] = [['chat', 'PUBLIC', unreadChat], ['rooms', 'ROOMS', 0], ['threads', 'THREADS', 0], ['notifs', 'ALERTS', unreadN], ['game', 'GAME', 0], ['profile', 'ME', 0]]
   if (isStaff) tabs.push(['admin', 'ADMIN', 0])
 
   if (profile?.banned) return <main className="p-6"><div className="panel p-5 max-w-md mx-auto"><h2 className="font-pixel text-xs text-yellow-300 mb-2">BANNED</h2><p>This account has been banned.</p><button className="btn mt-3" onClick={() => void supabase.auth.signOut()}>LOG OUT</button></div></main>
@@ -59,6 +60,7 @@ export default function Lobby() {
           {tab === 'rooms' && <Rooms />}
           {tab === 'threads' && <Threads openId={openThread} />}
           {tab === 'notifs' && <Notifications go={link} />}
+          {tab === 'game' && <Game />}
           {tab === 'profile' && <Profile />}
           {tab === 'admin' && <Admin />}
         </Suspense>

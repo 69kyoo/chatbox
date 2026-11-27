@@ -43,7 +43,7 @@ export default function Rooms() {
         {!sel.is_member && can('room.inspect') && <button className="btn btn-sm btn-alt" onClick={async () => { await supabase.rpc('join_room_visibly', { rid: sel.id }); void load() }}>JOIN VISIBLY</button>}
         <button className="btn btn-sm" onClick={() => setShowMembers(s => !s)}>MEMBERS</button>
       </div>
-      {!sel.is_member && can('room.inspect') && <p className="px-3 py-1 bg-[#3b2a9a] text-base">Read-only inspection. You are not shown as a member and cannot post unless you join visibly.</p>}
+      {!sel.is_member && can('room.inspect') && <p className="px-3 py-1 bg-[#1a7a4c] text-base">Read-only inspection. You are not shown as a member and cannot post unless you join visibly.</p>}
       {showMembers && <Members room={sel} isOwner={sel.owner_id === me} onChanged={load} />}
       <div className="flex-1 min-h-0">{sel.is_member ? <ChatPanel roomId={sel.id} /> : <ReadOnly roomId={sel.id} />}</div>
     </div>
@@ -54,7 +54,7 @@ export default function Rooms() {
         <button className="btn" onClick={() => void create()}>CREATE</button></div>
       {err && <p role="alert" className="text-pink-300">{err}</p>}
       {loading && <p className="text-cyan-300">Loading…</p>}
-      {!loading && rooms.length === 0 && <p className="text-violet-300">You are not in any private room yet. Create one, or ask a room owner to invite you.</p>}
+      {!loading && rooms.length === 0 && <p className="text-emerald-200">You are not in any private room yet. Create one, or ask a room owner to invite you.</p>}
       {rooms.map(r => <button key={r.id} onClick={() => open(r)} className="panel p-3 text-left flex items-center gap-2">
         <span className="truncate flex-1 text-xl">{r.name}</span>
         {r.owner_id === me && <span className="badge bg-yellow-300">OWNER</span>}{!r.is_member && <span className="badge bg-cyan-300">INSPECT</span>}</button>)}
@@ -85,7 +85,7 @@ function Members({ room, isOwner, onChanged }: { room: Room; isOwner: boolean; o
     if (error) setErr(error.message); else { setErr(''); setUname(''); load(); play('notify') }
   }
   async function remove(id: string) { const { error } = await supabase.rpc('room_remove_member', { rid: room.id, member: id }); if (error) setErr(error.message); else { load(); onChanged() } }
-  return <div className="p-2 border-b-4 border-black bg-[#1b0f4a] max-h-56 scroll-y flex flex-col gap-2">
+  return <div className="p-2 border-b-4 border-black bg-[#0a2a22] max-h-56 scroll-y flex flex-col gap-2">
     {list.map(l => { const p = who(l.user_id); return <div key={l.user_id} className="flex items-center gap-2"><span className="truncate flex-1">{p.username}</span><RoleBadge role={p.role} />
       {l.user_id === room.owner_id ? <span className="badge bg-yellow-300">HOST</span> : (isOwner || l.user_id === room.owner_id) && <button className="btn btn-sm btn-danger" onClick={() => void remove(l.user_id)}>KICK</button>}</div> })}
     {isOwner && <div className="flex gap-2"><input className="inp" placeholder="invite username" value={uname} onChange={e => setUname(e.target.value)} onKeyDown={e => e.key === 'Enter' && void add()} /><button className="btn btn-sm" onClick={() => void add()}>ADD</button></div>}

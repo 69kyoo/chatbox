@@ -28,7 +28,7 @@ export default function Profile() {
   }
   return <div className="p-3 scroll-y h-full"><section className="panel p-4 flex flex-col gap-3 max-w-lg mx-auto">
     <div className="flex items-center gap-3">
-      {profile.avatar_url ? <img src={profile.avatar_url} alt="" className="w-16 h-16 object-cover border-4 border-black" style={{ imageRendering: 'pixelated' }} /> : <div className="w-16 h-16 border-4 border-black bg-[#3b2a9a] grid place-items-center font-pixel text-xl">{profile.username[0]?.toUpperCase()}</div>}
+      {profile.avatar_url ? <img src={profile.avatar_url} alt="" className="w-16 h-16 object-cover border-4 border-black" style={{ imageRendering: 'pixelated' }} /> : <div className="w-16 h-16 border-4 border-black bg-[#1a7a4c] grid place-items-center font-pixel text-xl">{profile.username[0]?.toUpperCase()}</div>}
       <div className="min-w-0"><div className="text-2xl truncate">{profile.username}</div><RoleBadge role={profile.role} /></div></div>
     <label className="lbl">AVATAR</label><input type="file" accept="image/png,image/jpeg,image/webp" onChange={e => void avatar(e)} className="text-sm max-w-full" />
     <label className="lbl" htmlFor="un">USERNAME</label><input id="un" className="inp" value={name} maxLength={20} onChange={e => setName(e.target.value)} />

@@ -64,11 +64,11 @@ function ThreadList({ open }: { open: (id: string) => void }) {
         <button className="btn self-start" disabled={busy} onClick={() => void create()}>{busy ? '…' : 'POST'}</button></div>}
       {state === 'loading' && <p className="text-cyan-300">Loading…</p>}
       {state === 'error' && <p role="alert" className="text-pink-300">Could not load threads. <button className="underline" onClick={() => void load()}>retry</button></p>}
-      {state === 'ready' && rows.length === 0 && <p className="text-violet-300">No threads yet. Start the first one!</p>}
+      {state === 'ready' && rows.length === 0 && <p className="text-emerald-200">No threads yet. Start the first one!</p>}
       {rows.map(t => <button key={t.id} onClick={() => open(t.id)} className="panel p-3 text-left flex flex-col gap-1">
         <div className="flex items-center gap-2">{t.pinned && <span className="badge bg-cyan-300">PIN</span>}{t.locked && <span className="badge bg-pink-300">LOCK</span>}
           <span className="text-xl truncate">{t.revoked ? '[revoked thread]' : t.title}</span></div>
-        <div className="text-sm text-violet-300 flex gap-2 items-center flex-wrap"><span className="truncate max-w-[10rem]">{who(t.user_id).username}</span><RoleBadge role={who(t.user_id).role} />
+        <div className="text-sm text-emerald-200 flex gap-2 items-center flex-wrap"><span className="truncate max-w-[10rem]">{who(t.user_id).username}</span><RoleBadge role={who(t.user_id).role} />
           <span>{when(t.created_at)}</span><span>{counts[t.id] ?? 0} replies</span></div></button>)}
     </div>
   )
@@ -91,6 +91,7 @@ function ThreadView({ id, back }: { id: string; back: () => void }) {
       .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'thread_replies', filter: `thread_id=eq.${id}` }, p => { const r = p.new as Reply; if (!seen.current.has(r.id)) { seen.current.add(r.id); setReplies(a => [...a, r]); if (r.user_id !== me) play('receive') } })
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'thread_replies', filter: `thread_id=eq.${id}` }, p => setReplies(a => a.map(x => x.id === (p.new as Reply).id ? p.new as Reply : x)))
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'threads', filter: `id=eq.${id}` }, p => setT(p.new as Thread))
+      .on('postgres_changes', { event: 'DELETE', schema: 'public', table: 'threads' }, p => { if ((p.old as { id?: string }).id === id) setState('gone') })
       .subscribe(st => { if (st === 'SUBSCRIBED') void load() })
     return () => { void supabase.removeChannel(ch) }
   }, [id, load, me])
@@ -103,6 +104,11 @@ function ThreadView({ id, back }: { id: string; back: () => void }) {
     const r = data as Reply; if (!seen.current.has(r.id)) { seen.current.add(r.id); setReplies(a => [...a, r]) }; play('send')
   }
   const revoke = async (kind: 'thread' | 'reply', cid: string) => { const { error } = await supabase.rpc('revoke_content', { kind, cid }); if (error) setErr(error.message); else if (kind === 'thread') void load() }
+  const del = async () => {
+    if (!confirm('Delete this thread and all its replies permanently?')) return
+    const { error } = await supabase.rpc('delete_thread', { tid: id })
+    if (error) setErr(error.message); else { play('click'); back() }
+  }
   const report = async (kind: 'thread' | 'reply', target: string) => { const reason = prompt('Why are you reporting this?'); if (!reason) return
     const { error } = await supabase.from('reports').insert({ reporter_id: me, kind, target_id: target, reason: reason.slice(0, 300) }); setErr(error ? error.message : 'Report sent.') }
 
@@ -113,21 +119,22 @@ function ThreadView({ id, back }: { id: string; back: () => void }) {
     <div className="flex flex-col h-full min-h-0">
       <div className="flex items-center gap-2 p-2 border-b-4 border-black">
         <button className="btn btn-sm btn-alt" onClick={back}>BACK</button><span className="flex-1" />
+        {(t.user_id === me || mod) && <button className="btn btn-sm btn-danger" onClick={() => void del()}>DELETE</button>}
         {mod && <><button className="btn btn-sm" onClick={() => void supabase.rpc('thread_moderate', { tid: id, set_pinned: !t.pinned, set_locked: null })}>{t.pinned ? 'UNPIN' : 'PIN'}</button>
           <button className="btn btn-sm" onClick={() => void supabase.rpc('thread_moderate', { tid: id, set_pinned: null, set_locked: !t.locked })}>{t.locked ? 'UNLOCK' : 'LOCK'}</button></>}
       </div>
       <div className="flex-1 scroll-y p-3 flex flex-col gap-3">
         <article className="panel p-3 flex flex-col gap-2">
-          {t.revoked ? <p className="italic text-violet-300">[this thread was revoked]</p> : <>
+          {t.revoked ? <p className="italic text-emerald-200">[this thread was revoked]</p> : <>
             <h2 className="text-2xl break-words">{t.title}</h2>
             <p className="whitespace-pre-wrap break-words">{t.body}</p>{t.image_path && <Img path={t.image_path} />}</>}
-          <div className="text-sm text-violet-300 flex gap-2 items-center flex-wrap"><span className="truncate max-w-[10rem]">{op.username}</span><RoleBadge role={op.role} /><span>{when(t.created_at)}</span>
+          <div className="text-sm text-emerald-200 flex gap-2 items-center flex-wrap"><span className="truncate max-w-[10rem]">{op.username}</span><RoleBadge role={op.role} /><span>{when(t.created_at)}</span>
             {!t.revoked && (t.user_id === me || mod) && <button className="underline" onClick={() => void revoke('thread', t.id)}>{t.user_id === me ? 'revoke' : 'remove (mod)'}</button>}
             {!t.revoked && t.user_id !== me && <button className="underline" onClick={() => void report('thread', t.id)}>report</button>}</div>
         </article>
         {replies.map(r => { const p = who(r.user_id); return <div key={r.id} className={'panel p-2 ml-3 sm:ml-8 flex flex-col gap-1' + (r.revoked ? ' opacity-60' : '')}>
-          {r.revoked ? <p className="italic text-violet-300">reply revoked</p> : <><p className="whitespace-pre-wrap break-words">{r.body}</p>{r.image_path && <Img path={r.image_path} />}</>}
-          <div className="text-sm text-violet-300 flex gap-2 items-center flex-wrap"><span className="truncate max-w-[10rem]">{p.username}</span><RoleBadge role={p.role} /><span>{when(r.created_at)}</span>
+          {r.revoked ? <p className="italic text-emerald-200">reply revoked</p> : <><p className="whitespace-pre-wrap break-words">{r.body}</p>{r.image_path && <Img path={r.image_path} />}</>}
+          <div className="text-sm text-emerald-200 flex gap-2 items-center flex-wrap"><span className="truncate max-w-[10rem]">{p.username}</span><RoleBadge role={p.role} /><span>{when(r.created_at)}</span>
             {!r.revoked && (r.user_id === me || mod) && <button className="underline" onClick={() => void revoke('reply', r.id)}>{r.user_id === me ? 'revoke' : 'remove (mod)'}</button>}
             {!r.revoked && r.user_id !== me && <button className="underline" onClick={() => void report('reply', r.id)}>report</button>}</div></div> })}
         {err && <p role="alert" className="text-pink-300">{err}</p>}

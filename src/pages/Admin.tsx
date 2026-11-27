@@ -102,8 +102,8 @@ function Reports() {
   }, [])
   useEffect(() => { void load() }, [load])
   const kindOf = (k: string) => k === 'message' ? 'message' : k
-  return <div className="flex flex-col gap-2">{rows.length === 0 && <p className="text-violet-300">No open reports.</p>}
-    {rows.map(r => <div key={r.id} className="panel p-2 flex flex-col gap-1 break-words"><b>{r.kind}</b> <i>{r.reason}</i><p className="text-violet-200">“{preview[r.id]}”</p>
+  return <div className="flex flex-col gap-2">{rows.length === 0 && <p className="text-emerald-200">No open reports.</p>}
+    {rows.map(r => <div key={r.id} className="panel p-2 flex flex-col gap-1 break-words"><b>{r.kind}</b> <i>{r.reason}</i><p className="text-emerald-100">“{preview[r.id]}”</p>
       <div className="flex gap-2">{can('chat.moderate') && <button className="btn btn-sm btn-danger" onClick={async () => { await supabase.rpc('revoke_content', { kind: kindOf(r.kind), cid: r.target_id }); await supabase.rpc('resolve_report', { rid: r.id }); void load() }}>REMOVE</button>}
         <button className="btn btn-sm" onClick={async () => { await supabase.rpc('resolve_report', { rid: r.id }); void load() }}>DISMISS</button></div></div>)}</div>
 }
@@ -115,6 +115,6 @@ function Logs() {
     const { data } = await supabase.from('mod_logs').select('*').order('created_at', { ascending: false }).limit(100); const r = (data ?? []) as Log[]; setRows(r)
     const ids = [...new Set(r.flatMap(x => [x.actor_id, x.target_id]).filter(Boolean))] as string[]
     if (ids.length) { const { data: p } = await supabase.from('profiles').select('id,username').in('id', ids); const n: Record<string, string> = {}; p?.forEach(x => { n[x.id] = x.username }); setNames(n) } })() }, [])
-  return <div className="flex flex-col gap-1 text-base">{rows.map(l => <div key={l.id} className="border-b border-violet-900 py-1 break-words">
-    <span className="text-violet-300">{new Date(l.created_at).toLocaleString()}</span> <b>{l.actor_id ? names[l.actor_id] ?? '?' : 'system'}</b> {l.action}{l.target_id ? ` → ${names[l.target_id] ?? '?'}` : ''} <span className="text-violet-400">{Object.keys(l.details).length ? JSON.stringify(l.details) : ''}</span></div>)}</div>
+  return <div className="flex flex-col gap-1 text-base">{rows.map(l => <div key={l.id} className="border-b border-emerald-900 py-1 break-words">
+    <span className="text-emerald-200">{new Date(l.created_at).toLocaleString()}</span> <b>{l.actor_id ? names[l.actor_id] ?? '?' : 'system'}</b> {l.action}{l.target_id ? ` → ${names[l.target_id] ?? '?'}` : ''} <span className="text-emerald-300">{Object.keys(l.details).length ? JSON.stringify(l.details) : ''}</span></div>)}</div>
 }

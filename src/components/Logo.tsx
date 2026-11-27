@@ -12,7 +12,7 @@ export default function Logo({ small = false, onSecret }: { small?: boolean; onS
   }
   return (
     <h1 className={'logo select-none ' + (small ? 'logo-sm' : '')} onClick={click} aria-label="CHATKARI">
-      <span className="logo-text" data-text="CHATKARI" aria-hidden="true">CHATKARI</span>
+      <span className="logo-text" data-text="CHATKARI" aria-hidden="true">CHATKARI<i className="hat" /></span>
     </h1>
   )
 }

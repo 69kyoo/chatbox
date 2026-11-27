@@ -40,7 +40,7 @@ export default function AuthPage() {
         {msg && <p role="alert" className="text-pink-300 break-words">{msg}</p>}
         <button type="button" className="text-cyan-300 underline text-base self-start" onClick={() => { play('click'); setMode(mode === 'login' ? 'register' : 'login'); setMsg('') }}>
           {mode === 'login' ? 'new here? register' : 'have an account? login'}</button>
-        <p className="text-sm text-violet-300">Lost your password? Ask the site owner to reset it for you.</p>
+        <p className="text-sm text-emerald-200">Lost your password? Ask the site owner to reset it for you.</p>
       </form>
     </main>
   )

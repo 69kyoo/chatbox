@@ -33,7 +33,7 @@ export default function Composer({ onSend, placeholder = 'Type a message…', ma
   const fmt = left >= 3600 ? `${Math.floor(left / 3600)}h ${Math.floor(left % 3600 / 60)}m` : left >= 60 ? `${Math.floor(left / 60)}m ${left % 60}s` : `${left}s`
 
   return (
-    <form onSubmit={submit} className="safe-b pt-2 px-2 border-t-4 border-black bg-[#150a3a]">
+    <form onSubmit={submit} className="safe-b pt-2 px-2 border-t-4 border-black bg-[#0d2230]">
       {muted && <p role="status" className="text-yellow-300 pb-1">You are muted. Messages are blocked for {fmt}.</p>}
       {err && <p role="alert" className="text-pink-300 pb-1 break-words">{err}</p>}
       {preview && <div className="flex items-center gap-2 pb-2"><img src={preview} alt="preview" className="h-16 w-16 object-cover border-2 border-black" />

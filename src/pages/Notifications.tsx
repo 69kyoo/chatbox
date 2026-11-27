@@ -16,9 +16,9 @@ export default function Notifications({ go }: { go: (link: string) => void }) {
   return <div className="p-3 flex flex-col gap-2 scroll-y h-full">
     <button className="btn btn-sm self-start" onClick={() => void readAll()}>MARK ALL READ</button>
     {loading && <p className="text-cyan-300">Loading…</p>}
-    {!loading && rows.length === 0 && <p className="text-violet-300">Nothing yet.</p>}
+    {!loading && rows.length === 0 && <p className="text-emerald-200">Nothing yet.</p>}
     {rows.map(n => <button key={n.id} className={'panel p-2 text-left break-words ' + (n.read ? 'opacity-60' : '')}
       onClick={async () => { await supabase.from('notifications').update({ read: true }).eq('id', n.id); if (n.link) go(n.link); void load() }}>
-      {n.text}<div className="text-sm text-violet-300">{new Date(n.created_at).toLocaleString()}</div></button>)}
+      {n.text}<div className="text-sm text-emerald-200">{new Date(n.created_at).toLocaleString()}</div></button>)}
   </div>
 }
