@@ -1,9 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, ReactNode } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase } from './lib/supabase'
+import type { ThemeId } from './lib/theme'
 
 export type Role = 'owner' | 'admin' | 'moderator' | 'member'
-export type Profile = { id: string; username: string; avatar_url: string | null; bio: string | null; role: Role; banned: boolean; created_at: string }
+export type Profile = { id: string; username: string; avatar_url: string | null; bio: string | null; role: Role; banned: boolean; created_at: string; theme?: ThemeId; theme_locked?: boolean }
 type Ctx = {
   session: Session | null; profile: Profile | null; loading: boolean
   perms: string[]; can: (k: string) => boolean; muteUntil: Date | null; refresh: () => void

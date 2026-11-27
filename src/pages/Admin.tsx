@@ -3,6 +3,7 @@ import { supabase } from '../lib/supabase'
 import { useAuth, Role, Profile } from '../auth'
 import RoleBadge from '../components/RoleBadge'
 import { USERNAME_RE } from '../lib/identity'
+import { THEMES } from '../lib/theme'
 
 type Tab = 'users' | 'alerts' | 'reports' | 'logs'
 type Perm = { key: string; description: string; owner_only: boolean }
@@ -69,6 +70,9 @@ function Users() {
               if (e.target.value === 'default') await run(supabase.rpc('clear_user_permission', { target: u.id, perm: p.key }))
               else await run(supabase.rpc('set_user_permission', { target: u.id, perm: p.key, is_granted: e.target.value === 'grant' })); const { data } = await supabase.from('user_permissions').select('permission_key,granted').eq('user_id', u.id); const m: Record<string, boolean> = {}; data?.forEach(d => { m[d.permission_key] = d.granted }); setUp(m) }}>
               <option value="default">role default</option><option value="grant">grant</option><option value="deny">deny</option></select>{p.key}</label>)}</div></>}
+        {(profile?.role === 'owner' || profile?.role === 'admin') && (!prot || isOwner) && <div className="flex items-center gap-2 flex-wrap"><span className="lbl">THEME</span>
+          <select className="inp !w-auto" value={u.theme ?? 'christmas'} onChange={e => void run(supabase.rpc('admin_set_theme', { target: u.id, t: e.target.value }), `Theme set for ${u.username}`)}>{THEMES.map(t => <option key={t.id} value={t.id}>{t.name.toLowerCase()}</option>)}</select>
+          {u.theme_locked && <span className="badge bg-red-500">LOCKED BY STAFF</span>}</div>}
         {can('user.delete') && !prot && <button className="btn btn-sm btn-danger self-start" onClick={() => void del(u.id, u.username)}>DELETE USER</button>}
       </div>}</div> })}
   </div>
